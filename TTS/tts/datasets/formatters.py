@@ -493,3 +493,27 @@ def kokoro(root_path, meta_file, **kwargs):  # pylint: disable=unused-argument
             text = cols[2].replace(" ", "")
             items.append({"text": text, "audio_file": wav_file, "speaker_name": speaker_name})
     return items
+
+def aidatatang_200zh(root_path: str, meta_file: str, **kwargs) -> List[List[str]]:  # pylint: disable=unused-argument
+    """Normalizes the aidatatang meta data file to TTS format
+
+    Args:
+        root_path (str): path to the aidatatang dataset
+        meta_file (str): name of the meta dataset containing names of wav to select and the transcript of the sentence
+    Returns:
+        List[List[str]]: List of (text, wav_path, speaker_name) associated with each sentences
+    """
+    txt_file = os.path.join(root_path, meta_file)
+    items = []
+    with open(txt_file, "r", encoding="utf-8") as ttf:
+        for line in ttf:
+            fragments = line.rstrip("\n").replace("\t"," ").split(" ")
+            wav_name = fragments[0]
+            text = " ".join(fragments[1:])
+            speaker_name = wav_name[5:10]
+            wav_path = os.path.join(root_path, "corpus/train", speaker_name, wav_name + ".wav")
+            if os.path.isfile(wav_path):
+                items.append({"text": text, "audio_file": wav_path, "speaker_name": speaker_name})
+            # else:
+            #     print(f"No file found for {wav_path}")
+    return items

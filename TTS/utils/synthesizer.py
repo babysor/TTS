@@ -68,7 +68,7 @@ class Synthesizer(object):
         self.num_languages = 0
         self.tts_languages = {}
         self.d_vector_dim = 0
-        self.seg = self._get_segmenter("en")
+        self.seg = self._get_segmenter("zh")# hardcoded
         self.use_cuda = use_cuda
 
         if self.use_cuda:
@@ -91,7 +91,7 @@ class Synthesizer(object):
         Returns:
             [type]: [description]
         """
-        return pysbd.Segmenter(language=lang, clean=True)
+        return pysbd.Segmenter(language=lang, clean=False)
 
     def _load_tts(self, tts_checkpoint: str, tts_config_path: str, use_cuda: bool) -> None:
         """Load the TTS model.
